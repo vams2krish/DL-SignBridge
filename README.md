@@ -1,174 +1,201 @@
-# SignBridge
+# SignBridge — Deep Learning Accessibility Studio
 
-### Deep Learning · Real-time Sign Language ↔ Speech & Avatar Accessibility Agent
+**Gesture → captions & speech · Speech/text → illustrative avatar**
 
-![SignBridge concept artwork](docs/assets/signbridge-cover.png)
+A working browser demo that explores two-way accessible communication with on-device deep learning, editable captions, and a 3D companion named Ari.
 
-> **Status: concept and development blueprint.** This repository currently contains documentation and concept artwork, not a trained model or working translation application. Real-time operation, visual accuracy, and translation quality are goals that must be validated.
+**[Open the live demo](https://signbridge-gesture-lab.adam-vamshikrishna.chatgpt.site)** · Hosted privately through Sites; sign in with the owning account. The source repository remains public.
 
-SignBridge proposes a two-way communication assistant for Deaf, hard-of-hearing, and hearing people. A camera captures signing for translation into captions and synthesized speech, optionally delivered through a speaking avatar. In the reverse direction, speech or typed text is translated into a selected sign language and presented by a signing avatar with coordinated hands, body, gaze, and facial expressions.
+> **Release scope:** deployable research demo, not a production-ready sign-language interpreter. This version recognizes **seven isolated hand gestures** and maps a bounded set of English phrases to illustrative avatar poses. It does not translate ASL, continuous signing, or arbitrary sentences. No translation-accuracy claim is made.
 
-## Is this an ML, DL, or GenAI project?
+## Product showcases
 
-**Primary classification: Deep Learning (DL), within Machine Learning (ML).** Video understanding, temporal sign recognition, translation, and speech recognition are intended to use neural models. Generative AI may support language processing or motion synthesis in later research, but is optional and does not establish linguistic accuracy.
+These are actual screenshots of the implemented application. The original AI-generated cover remains in [concept artwork](docs/artwork.md).
 
-**Repository name:** `DL-SignBridge`  
-**Project title:** **Deep Learning — SignBridge Accessibility Agent**
+### 1. The studio
 
-| Area | Proposed approach | Role |
-| --- | --- | --- |
-| Visual perception | Neural hand, face, and body landmark detection or video encoders | Capture movement and non-manual signals |
-| Sign understanding | Temporal neural models, such as Transformers | Model signs in context across frames |
-| Translation | Language-specific sequence models | Translate meaning between different languages |
-| Speech input/output | Automatic speech recognition and text-to-speech | Convert audio to text and text to voice |
-| Signing avatar | Validated motion library first; learned motion later | Render signs with correct timing and expressions |
-| Optional GenAI | Constrained language or motion generation | Research extension requiring review |
+Permission-based camera input, local vision, editable captions, speech controls, and a 3D avatar in one workspace.
 
-No model, provider, dataset, or performance result has been selected or implemented yet.
+![SignBridge studio with camera controls, captions, avatar and seven-gesture library](docs/showcase/01-studio.png)
 
-## Problem and intended users
+### 2. Real model recognition
 
-Communication barriers arise when participants use different languages or modalities and an interpreter is unavailable. SignBridge explores accessible conversational assistance for everyday interactions, learning, and service desks. It should be developed with Deaf signers and sign-language experts from the beginning.
+The sample button runs the actual MediaPipe model on an attributed test photograph. A thumb-up classification proposes “Yes” for review. The confidence shown is a model score, not measured accuracy; the inference time is specific to the test device and excludes capture, holding, review, and speech.
 
-Sign languages are distinct natural languages, with their own grammar and regional variation. They are not universal hand encodings of spoken words. The first prototype should explicitly select one pair—for example, **American Sign Language (ASL) and English**—before training or collecting data. ASL–English is a proposed initial scope, not current support.
+![Actual thumb-up sample recognition with landmarks, model score and editable Yes caption](docs/showcase/02-recognition.png)
 
-## Planned experiences
+### 3. Text to avatar
 
-### 1. Sign language to captions, speech, and a speaking avatar
+“Peace” selects the illustrative Victory pose. The avatar has articulated fingers, a procedural upper body, adjustable idle motion, and decorative mouth movement during speech. These motions are not linguist-validated sign-language animations.
 
-1. The user chooses a supported sign language and consents to camera capture.
-2. The application checks framing, visibility, and lighting.
-3. A visual model processes hands, face, body, and motion over time.
-4. A temporal model recognizes or translates signed content into text.
-5. Captions appear for review; uncertain content triggers clarification.
-6. Confirmed text can be read aloud or delivered by a lip-synchronized speaking avatar.
+![Speech and text input driving the Victory gesture on the Ari avatar](docs/showcase/03-avatar.png)
 
-### 2. Speech or text to a signing avatar
+### 4. The supported gesture library
 
-1. The user types text or enables microphone capture.
-2. Speech recognition produces an editable transcript.
-3. Translation maps the intended meaning into the target sign language.
-4. A motion planner selects validated signs, transitions, timing, and non-manual features.
-5. An avatar renders the message, with replay, pause, and speed controls.
-6. Missing vocabulary or unsupported messages produce an explicit fallback instead of invented signs.
+Each category includes a pose hint, chosen communication intent, and avatar preview. The chosen phrases are demo conventions, not an ASL dictionary.
 
-A speaking avatar and a signing avatar serve different purposes. Lip movement alone does not translate spoken language into a sign language.
+![Seven supported gesture categories with pose instructions and preview controls](docs/showcase/04-library.png)
 
-## Proposed architecture
+### 5. Mobile layout
 
-```mermaid
-flowchart TD
-    Camera[Camera: signed video] --> Perception[Hand, face and body perception]
-    Perception --> Temporal[Temporal sign understanding]
-    Temporal --> Translation[Sign-to-text translation]
-    Translation --> Review[Captions and uncertainty review]
-    Review --> Speech[Text-to-speech]
-    Speech --> Speaking[Optional speaking avatar]
-    Mic[Microphone] --> ASR[Speech recognition]
-    ASR --> Transcript[Editable transcript]
-    Text[Typed text] --> Transcript
-    Transcript --> SignTranslation[Text-to-sign translation]
-    SignTranslation --> Motion[Validated motion planning]
-    Motion --> Signing[Signing avatar: hands, face and body]
-```
+The studio stacks its input and output panels on smaller screens, with the same consent, fallback, and caption controls. Browser support for camera, speech recognition, and WebGL varies; physical mobile-device validation remains pending.
 
-### Candidate implementation stack
+<img src="docs/showcase/05-mobile.png" alt="SignBridge studio on a 390-pixel mobile viewport" width="390" />
 
-These are options to evaluate, not installed dependencies or guarantees of compatibility.
+## What works now
 
-| Layer | Candidate technology | Decision criteria |
-| --- | --- | --- |
-| Accessible client | TypeScript and React | Keyboard access, captions, clear media controls |
-| Video capture | Browser camera APIs | Explicit permissions and device compatibility |
-| Landmark extraction | MediaPipe or an equivalent vision model | Tracking quality and on-device feasibility |
-| Model training | Python and PyTorch | Reproducible training and evaluation |
-| Inference service | FastAPI; streaming transport if justified | Latency, throughput, and privacy |
-| Avatar renderer | Three.js and a rigged 3D avatar | Finger articulation and facial control |
-| Speech | Local or hosted ASR/TTS | Language coverage, latency, consent, and cost |
-| Model deployment | ONNX Runtime or server inference | Measured performance on target hardware |
-
-## Development roadmap
-
-- [ ] **Define the scope:** choose a language pair, consult Deaf collaborators, and define vocabulary and intended settings.
-- [ ] **Build an accessible shell:** camera preview, editable captions, transcript review, and avatar playback controls.
-- [ ] **Create a bounded recognition baseline:** evaluate a small vocabulary before attempting unrestricted conversation.
-- [ ] **Add continuous signing:** handle sign boundaries, sentence context, and uncertainty.
-- [ ] **Build speech-to-sign playback:** start with linguist-reviewed motion clips and explicit unsupported-content handling.
-- [ ] **Integrate both directions:** measure end-to-end delay and evaluate complete conversations.
-- [ ] **Validate with users:** publish limitations and results for the selected language, hardware, and population.
-- [ ] **Explore motion generation:** only after establishing comprehensibility and quality baselines.
-
-## Data and training plan
-
-- Select datasets with documented language, consent, permitted uses, and license terms. No training data is included here.
-- Record signer diversity, dialect, lighting, camera placement, clothing, occlusion, and annotation quality.
-- Keep signers separate across training, validation, and test sets to reduce identity leakage.
-- Preserve temporal context and facial information where consent permits; hand landmarks alone may omit linguistic information.
-- Document preprocessing, normalization, augmentations, vocabulary, splits, model settings, and random seeds.
-- Compare simple bounded baselines with richer temporal models before increasing complexity.
-- Publish dataset and model documentation, known gaps, and access restrictions before releasing weights.
-
-## Accuracy, visuals, and evaluation
-
-**No accuracy, latency, or comprehension scores are available.** A convincing animation is not evidence of correct translation. Evaluation should distinguish recognition, translation, avatar comprehensibility, and usability.
-
-| Dimension | Proposed measurement |
+| Capability | Implementation and boundary |
 | --- | --- |
-| Isolated sign recognition | Per-class precision, recall, F1, and confusion matrix |
-| Continuous recognition | Gloss sequence error rate where gloss annotations are appropriate |
-| Meaning preservation | Human judgments by fluent signers and bilingual reviewers; automated text metrics as supporting evidence |
-| Signing avatar quality | Comprehension, handshape, orientation, location, motion, facial grammar, and transitions |
-| Real-time behavior | End-to-end median and p95 delay, frame rate, and dropped frames on named devices |
-| Robustness | Results across unseen signers, dialects, camera conditions, and occlusion |
-| Uncertainty | Calibration, rejection behavior, and clarification frequency |
-| Accessibility | Keyboard and screen-reader testing, caption readability, and user task completion |
+| Live gesture recognition | Self-hosted MediaPipe neural model, CPU inference in a browser worker, one hand at a time |
+| Temporal proposal filtering | Default 70% model-score threshold, 650 ms confident camera hold, release-based repeat suppression |
+| Sample without camera | Real inference on Google's attributed thumb-up test photo; no synthetic prediction |
+| Caption review | Editable caption, user-triggered text-to-speech, stop speaking, voice selection |
+| Speech input | Optional browser speech recognition with separate consent and editable transcript |
+| Text/speech to avatar | Whole-phrase matching against seven supported intents; unsupported text remains visible |
+| Avatar | Procedural Three.js character with articulated fingers and seven illustrative static gesture poses |
+| Privacy controls | No application recording, upload, analytics, backend, or persistent conversation storage |
+| Session history | Confirmed speech and avatar messages in memory, capped at 20; clear session also stops devices |
+| Accessibility | Semantic controls, native modal dialogs, visible focus, live status, reduced-motion option, text fallback |
+| Evaluation tooling | Local image-manifest harness with declared signer separation, duplicate detection, confusion matrix and latency |
+| Verification | Unit tests, browser integration tests, accessibility scan, production build, dependency audit, GitHub Actions workflow |
 
-Set numerical targets with collaborators after baseline measurement. Report the full evaluation setup and subgroup gaps rather than a single headline accuracy number.
+Browser speech recognition may send audio to its provider. TTS voices can be local or remote; local voices are labeled. Camera processing stays on the device. Hiding the page, switching the app view/direction, or clearing the session stops active capture and speech.
 
-## Accessibility and responsible design
+## Is it ML, DL, or GenAI?
 
-- Make camera and microphone use explicit, revocable, and visible.
-- Prefer on-device processing where feasible; document every remote processing path.
-- Do not retain video, audio, or transcripts by default. Any recording should require separate consent and a stated retention period.
-- Support editable text, visible uncertainty, replay, adjustable avatar speed, and text fallback.
-- Maintain clear facial and hand visibility, including contrast and adequate rendering size.
-- Avoid presenting unverified translations as authoritative. This concept is not a validated substitute for qualified interpreters in critical interactions.
-- Review outputs with Deaf collaborators and compensate their expertise.
-- Treat camera, face, and voice data as sensitive; keep credentials and personal media out of public commits.
+**Primary classification: Deep Learning (DL), a subset of Machine Learning (ML).** The shipped visual recognition uses pretrained MediaPipe neural networks. Temporal confidence filtering and phrase mapping are deterministic application logic. The avatar is procedural animation. There is no LLM, generative translation model, or OpenAI API dependency.
 
-## Repository contents
+The long-term project remains **Deep Learning — SignBridge Accessibility Agent**, with ASL–English translation as a proposed future research direction. Actual language scope must be agreed with Deaf collaborators and sign-language specialists; seven hand categories do not establish support for a natural sign language.
 
-```text
-DL-SignBridge/
-├── README.md                         # Project overview and development blueprint
-├── .gitignore                        # Excludes secrets, environments and private media
-└── docs/
-    ├── artwork.md                    # Cover provenance and generation prompt
-    └── assets/
-        └── signbridge-cover.png      # AI-generated concept artwork
-```
+## Try it locally
 
-## Getting started
-
-This is a documentation-first repository. There is no application to install, model to download, or training command to run yet.
+Requirements: **Node.js 24**, npm, an internet connection for the initial dependency/model download, and a current desktop Chromium browser. Camera access requires HTTPS or localhost. Text input and captions remain available if optional speech APIs are unsupported.
 
 ```bash
 git clone https://github.com/vams2krish/DL-SignBridge.git
-cd DL-SignBridge
+cd DL-SignBridge/app
+npm ci
+npm run assets
+npm run dev
 ```
 
-Begin by selecting the language pair and recording a small, measurable prototype scope. Future implementation should add verified setup instructions, dependency versions, tests, and a reproducible demo alongside the relevant code.
+Open the Local URL printed by Vite, normally `http://127.0.0.1:5173/`. No API key or account database is needed. Model and WASM assets are self-hosted after preparation; there is no service-worker/offline-install guarantee.
 
-## Contributing
+### Walk through both directions
 
-Contributions from Deaf community members, sign-language linguists, accessibility practitioners, animators, and ML engineers are welcome. Open an issue describing the language, use case, evidence, and expected outcome before proposing a major change. Do not upload recordings of other people without their permission or data without redistribution rights.
+1. Choose **Run sample photo**. Wait for the real model to propose **Yes**.
+2. Edit the caption if needed, then choose **Speak caption**. Choose an installed voice under **Studio settings** if necessary.
+3. To use a camera, choose **Enable camera**, review consent, then grant browser permission. Hold one supported gesture steady until a proposal appears. Review before speaking.
+4. Switch to **Speech / text → Avatar**. Type **Peace** or select a phrase and choose **Animate message**.
+5. Optionally choose **Use microphone**, review its separate privacy notice, dictate a supported phrase, and review the transcript before animating it.
+6. Try an unsupported sentence: the app preserves the text and declines to invent a gesture.
+7. Use **Clear session & stop devices** to stop camera, microphone, and speech and clear session content.
 
-## Research and technical references
+## Supported demo vocabulary
 
+| Model category | Demo phrase | Reverse-input aliases |
+| --- | --- | --- |
+| `Open_Palm` | Hello | hello, hi, open palm |
+| `Thumb_Up` | Yes | yes, thumb up, thumbs up |
+| `Thumb_Down` | No | no, thumb down, thumbs down |
+| `Closed_Fist` | Wait | wait, fist, closed fist |
+| `Pointing_Up` | One moment | one moment, point up, pointing up |
+| `Victory` | Peace | peace, victory |
+| `ILoveYou` | I love you | i love you |
+
+Matching is case-insensitive and ignores common punctuation; it requires the complete supported phrase. For example, “No thanks” is unsupported even though “No” is supported. Manual library previews are explicitly labeled and do not create camera-recognition results.
+
+## Current architecture
+
+```mermaid
+flowchart TD
+    Camera[User-authorized camera] --> Frames[One in-flight image bitmap]
+    Sample[Attributed sample photo] --> Worker
+    Frames --> Worker[Browser worker: MediaPipe neural inference]
+    Assets[Self-hosted model and WASM] --> Worker
+    Worker --> Landmarks[Gesture category, landmarks and timing]
+    Landmarks --> Gate[Category allowlist, confidence and camera hold]
+    Gate --> Review[Editable caption proposal]
+    Review --> Confirm[User chooses Speak caption]
+    Confirm --> TTS[Browser text-to-speech]
+    TTS --> Speaking[Decorative avatar mouth animation]
+    Mic[Separately consented microphone] --> ASR[Optional browser speech provider]
+    ASR --> Text[Editable English text]
+    Typed[Typed phrase] --> Text
+    Text --> Exact[Whole-phrase vocabulary matching]
+    Exact --> Supported[Supported illustrative pose]
+    Exact --> Fallback[Unsupported: visible text fallback]
+    Supported --> Avatar[Three.js procedural avatar]
+```
+
+The model runs off the UI thread. Camera frames preserve their source aspect ratio for inference, with letterboxed preview and landmark alignment. Media tracks, worker resources, and avatar GPU resources have explicit cleanup paths. The 3D renderer loads separately from the initial interface bundle.
+
+## Verify and build
+
+From `app/`:
+
+```bash
+npm test
+npm run build
+npm audit --audit-level=moderate
+npx playwright install chromium
+npm run test:e2e
+npm run preview
+```
+
+Browser tests run against a dedicated local production-preview port. The sample test uses actual model inference. Physical audio output and microphone recognition are stubbed at their browser API boundaries in automated tests. A generated camera stream from the attributed sample exercises the actual frame loop and hold gate; this does not validate a physical camera or a real signer's performance.
+
+The test suite regenerates the README's five showcases. Dependency licenses and model provenance are documented in [third-party notices](app/THIRD_PARTY_NOTICES.md) and [the model provenance manifest](app/public/models/provenance.json).
+
+See [evaluation protocol](docs/evaluation.md) for a private dataset harness and [production readiness](docs/production-readiness.md) for the remaining release gates. The GitHub workflow runs install, asset preparation, tests, build, audit, and browser checks on pushes and pull requests.
+
+Latest local verification: **17 unit tests and 6 browser tests passed**, production build passed, no violations in the tested initial accessibility scan, and zero known dependency vulnerabilities. Read the [verification report](docs/verification.md) for the exact tested boundaries and limitations. Hosted deployment succeeded on October 28, 2026.
+
+## Roadmap and honest progress
+
+- [x] Build a responsive studio with camera permission, caption review, avatar controls, and text fallback.
+- [x] Integrate a pretrained seven-category gesture baseline and real-model functional sample.
+- [x] Filter camera proposals by confidence, hold time, and release before repeating.
+- [x] Connect reviewed captions to speech and a bounded speech/text-to-avatar pathway.
+- [x] Add a gesture library, privacy notices, session clearing, and reduced decorative motion.
+- [x] Add reproducible evaluation tooling, automated checks, CI, and actual product screenshots.
+- [ ] Confirm the target natural language pair and use cases with compensated Deaf collaborators.
+- [ ] Establish a consented, representative, signer-disjoint evaluation dataset and publish metrics.
+- [ ] Train or integrate language-specific recognition and translation models, including continuous signing and non-manual grammar.
+- [ ] Add linguist-reviewed motion clips and validate avatar comprehensibility with fluent signers.
+- [ ] Measure end-to-end conversational latency on named physical devices and browsers.
+- [ ] Complete physical hardware, assistive-technology, independent accessibility, security, and operational release reviews.
+- [ ] Explore constrained generative motion only after validated baselines exist.
+
+The completed baseline is gesture classification, not completion of the original ASL translation research goals. A successful test photograph does not establish generalization or translation accuracy. This demo should not be used as a substitute for a qualified interpreter in critical interactions.
+
+## Repository layout
+
+```text
+DL-SignBridge/
+├── app/
+│   ├── src/                    # React studio, camera/speech hooks, domain logic, avatar
+│   ├── public/                 # Worker, sample photo, generated local model/WASM assets
+│   ├── scripts/                # Asset preparation, local model diagnostics, evaluation
+│   ├── tests/                  # Browser integration and accessibility tests
+│   ├── .openai/hosting.json     # Sites identity and static hosting configuration
+│   └── THIRD_PARTY_NOTICES.md
+├── docs/
+│   ├── showcase/               # Five real product screenshots
+│   ├── evaluation.md           # Evaluation manifest and methodology
+│   ├── production-readiness.md # Safeguards and remaining release gates
+│   └── artwork.md              # Original concept-art provenance
+└── .github/workflows/verify.yml
+```
+
+## Contributing and research references
+
+Contributions from Deaf collaborators, linguists, accessibility practitioners, animators, and ML engineers are welcome. Open an issue with the language, use case, evidence, and expected outcome. Do not upload recordings, transcripts, or datasets without consent and redistribution rights. Private data, model caches, and local evaluation reports are excluded from Git.
+
+- [MediaPipe Gesture Recognizer documentation](https://ai.google.dev/edge/mediapipe/solutions/vision/gesture_recognizer/web_js) — model integration and supported categories.
 - [Sign Language Recognition, Generation, and Translation: An Interdisciplinary Perspective](https://www.microsoft.com/en-us/research/wp-content/uploads/2019/07/Sign_Language_Workshop_Camera_accessible.pdf) — linguistic context and the distinction between recognition, translation, and production.
-- [U.S. Deaf Community Perspectives on Automatic Sign Language Translation](https://www.microsoft.com/en-us/research/uploads/prod/2023/10/Automatic_Sign_Language_Translation_Perspectives.pdf) — community perspectives to inform participatory design.
-- [MediaPipe HolisticLandmarker API](https://developers.google.com/edge/api/mediapipe/python/mp/tasks/vision/HolisticLandmarker) — a candidate perception component; landmark detection itself does not translate sign language.
+- [U.S. Deaf Community Perspectives on Automatic Sign Language Translation](https://www.microsoft.com/en-us/research/uploads/prod/2023/10/Automatic_Sign_Language_Translation_Perspectives.pdf) — community perspectives for participatory design.
 
-## License and assets
+## License
 
-No open-source license has been selected yet. Public visibility alone does not grant a license to reuse the repository. Dataset, model, avatar, and motion asset licenses must be reviewed separately before they are added. The cover is AI-generated concept artwork, not an application screenshot or instructional sign-language reference.
+No open-source license has been selected for original project code. Public visibility alone does not grant reuse rights. Third-party code, model weights, and sample assets retain their respective licenses; see [third-party notices](app/THIRD_PARTY_NOTICES.md). Screenshots show the implemented demo. The older cover image is AI-generated concept artwork.

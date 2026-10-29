@@ -15,3 +15,14 @@ checkpoints/
 *.pt
 *.pth
 *.onnx
+*.tsbuildinfo
+test-results/
+playwright-report/
+app/public/wasm/
+app/public/vision_bundle.mjs
+app/public/vision_bundle.js
+app/public/models/gesture_recognizer.task
+.openai/sites/
+*.tar.gz
+app/reports/
+.site-publish/

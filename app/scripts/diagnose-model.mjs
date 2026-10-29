@@ -1,0 +1,15 @@
+import { chromium } from '@playwright/test';
+const browser = await chromium.launch({headless:true,args:['--use-gl=angle','--use-angle=swiftshader','--enable-unsafe-swiftshader']});
+const page = await browser.newPage();
+page.on('pageerror',e=>console.log('PAGE ERROR:',e.message));
+page.on('console',m=>{if(m.type()==='error'||m.type()==='warning')console.log(m.type(),m.text().slice(0,500));});
+page.on('worker',w=>console.log('WORKER:',w.url()));
+await page.goto(process.env.DEMO_URL||'http://127.0.0.1:5173/');
+await page.getByRole('button',{name:'Run sample photo'}).click();
+await page.waitForFunction(()=>document.querySelector('.detection-pill')||document.querySelector('[role="alert"]'),{},{timeout:60000}).catch(()=>{});
+console.log('ALERT:',await page.locator('[role="alert"]').allTextContents());
+console.log('STATUS:',await page.locator('[role="status"]').allTextContents());
+console.log('PHASE:',await page.locator('.camera-status').textContent());
+console.log('CAPTION:',await page.locator('#caption').inputValue());
+console.log('DETECTION:',await page.locator('.detection-pill').allTextContents());
+await browser.close();

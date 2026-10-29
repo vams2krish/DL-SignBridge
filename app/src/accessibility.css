@@ -1,0 +1,33 @@
+/* Readable metadata and WCAG AA text contrast on warm studio surfaces. */
+.intro-note p,.intro-note div>span,.mode-tabs button,.step,.history-empty,footer,.scope-note,.camera-empty>span,.avatar-stage-label>span{color:#506249}
+.small-tag,.micro-label,.caption-label,.frame-label{color:#50644f}
+.caption-editor textarea::placeholder{color:#62715c}
+.mode-tabs button,.primary,.secondary{font-size:12px}
+.micro-label,.small-tag,.avatar-label,.avatar-stage-label{font-size:9px}
+.caption-label{font-size:9px}
+.caption-label span{font-size:8px}
+.caption-note,.under-control{font-size:9px}
+.camera-empty p{font-size:12px}
+.camera-empty>span{font-size:10px}
+.step{font-size:11px}
+.camera-status{font-size:10px}
+.frame-label{font-size:8px}
+.gesture-card strong{font-size:11px}
+.gesture-card small{font-size:10px;color:#586b50}
+.gesture-card{min-height:122px}
+.avatar-caption .micro-label{font-size:8px}
+.avatar-caption strong{font-size:11px}
+.avatar-caption{max-width:64%}
+.history-empty,.scope-note p,.feedback{font-size:11px}
+.history-list li{font-size:12px}
+.history-direction{font-size:10px}
+footer,footer button{font-size:10px}
+.section-heading button,.settings-button{font-size:11px}
+.section-heading .micro-label{font-size:9px}
+.avatar-stage{min-height:320px}
+.avatar-stage-label{max-width:90%;line-height:1.6}
+@media(max-width:800px){.settings-button{font-size:0}.avatar-caption{bottom:48px;max-width:90%}.avatar-caption .micro-label{font-size:7px}.avatar-caption strong{font-size:10px}.mode-tabs button{font-size:10px}.caption-note{font-size:8px}.gesture-card strong{font-size:9px}.gesture-card small{font-size:9px}.section-heading .micro-label{font-size:8px}.small-tag{font-size:8px}.history-list li{font-size:10px}}
+@media(max-width:580px){.mode-tabs button{font-size:10px}.avatar-caption{bottom:13px;max-width:61%}.avatar-caption strong{font-size:10px}.avatar-caption .micro-label{font-size:7px}.camera-stage{height:310px}.scope-note p,.history-empty{font-size:10px}.gesture-card strong{font-size:10px}.section-heading button{font-size:9px}footer,footer button{font-size:9px}.caption-note{font-size:8px}.section-heading .micro-label{font-size:7px}}
+
+.skip-link{position:absolute;left:-10000px;top:auto;width:1px;height:1px;overflow:hidden}.skip-link:focus{position:fixed;left:20px;top:10px;width:auto;height:auto;overflow:visible}
+.camera-stage video,.sample-image{object-fit:contain}

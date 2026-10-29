@@ -1,0 +1,14 @@
+node_modules/
+dist/
+public/wasm/
+public/vision_bundle.js
+public/vision_bundle.mjs
+public/models/gesture_recognizer.task
+test-results/
+playwright-report/
+reports/
+*.tsbuildinfo
+.env
+.env.*
+.sites-runtime/
+.sites-checkout/

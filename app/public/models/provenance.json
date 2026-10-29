@@ -1,0 +1,8 @@
+{
+  "source": "https://storage.googleapis.com/mediapipe-models/gesture_recognizer/gesture_recognizer/float16/1/gesture_recognizer.task",
+  "modelVersion": 1,
+  "runtime": "1.2.0",
+  "sha256": "97952348cf6a6a4915c2ea1496b4b37ebabc50cbbf80571435643c455f2b0482",
+  "bytes": 8373440,
+  "license": "Apache-2.0; see THIRD_PARTY_NOTICES.md and upstream model card"
+}
