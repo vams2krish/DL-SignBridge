@@ -1,0 +1,23 @@
+{
+  "environment": "win32 x64",
+  "browser": "156.0.8078.4",
+  "scenario": "Same thumb-up test photograph repeated 25 times, one hand, CPU delegate. Warm samples exclude first 3 frames. Measures inference only, not real signer accuracy or camera-to-speech latency.",
+  "summary": [
+    {
+      "mode": "IMAGE",
+      "frames": 25,
+      "firstFrameMs": 208.2000000178814,
+      "warmMedianMs": 75.90000000596046,
+      "warmP95Ms": 87.09999999403954,
+      "lastLabel": "Thumb_Up"
+    },
+    {
+      "mode": "VIDEO",
+      "frames": 25,
+      "firstFrameMs": 248.59999999403954,
+      "warmMedianMs": 48.60000002384186,
+      "warmP95Ms": 71,
+      "lastLabel": "Thumb_Up"
+    }
+  ]
+}

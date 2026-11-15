@@ -10,7 +10,7 @@ describe('bounded message planning', () => {
 });
 describe('camera proposal stability and repeat suppression',()=>{
   it('rejects short holds and low confidence',()=>{
-    const gate=new StabilityGate();
+    const gate=new StabilityGate(.75,650,350,0,2);
     expect(gate.update('Thumb_Up',.99,0)).toBe(null);
     expect(gate.update('Thumb_Up',.99,649)).toBe(null);
     expect(gate.update('Thumb_Up',.5,650)).toBe(null);
@@ -18,7 +18,7 @@ describe('camera proposal stability and repeat suppression',()=>{
     expect(gate.update('Thumb_Up',.99,1350)).toBe('Thumb_Up');
   });
   it('emits once per hold, then re-arms only after a sustained release',()=>{
-    const gate=new StabilityGate();
+    const gate=new StabilityGate(.75,650,350,0,2);
     gate.update('Thumb_Up',.9,0);
     expect(gate.update('Thumb_Up',.9,650)).toBe('Thumb_Up');
     expect(gate.update('Thumb_Up',.9,2000)).toBe(null);
@@ -27,13 +27,13 @@ describe('camera proposal stability and repeat suppression',()=>{
     expect(gate.update('Thumb_Up',.9,3150)).toBe('Thumb_Up');
   });
   it('requires a new hold after switching gestures',()=>{
-    const gate=new StabilityGate();gate.update('Thumb_Up',.9,0);
+    const gate=new StabilityGate(.75,650,350,0,2);gate.update('Thumb_Up',.9,0);
     gate.update('Thumb_Down',.9,600);
     expect(gate.update('Thumb_Down',.9,700)).toBe(null);
     expect(gate.update('Thumb_Down',.9,1250)).toBe('Thumb_Down');
   });
   it('rejects unknown and non-finite predictions',()=>{
-    const gate=new StabilityGate();
+    const gate=new StabilityGate(.75,650,350,0,2);
     expect(gate.update('Unknown',1,1000)).toBe(null);
     expect(gate.update('Thumb_Up',NaN,2000)).toBe(null);
     expect(gate.update('Thumb_Up',Infinity,3000)).toBe(null);

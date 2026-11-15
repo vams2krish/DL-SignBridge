@@ -15,7 +15,7 @@ export default function Avatar(props: Props) {
     try { renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true }); }
     catch { setFailed(true); return; }
     const container = host.current;
-    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 1.25));
     renderer.outputColorSpace = THREE.SRGBColorSpace;
     container.appendChild(renderer.domElement);
     const scene = new THREE.Scene();
@@ -30,7 +30,7 @@ export default function Avatar(props: Props) {
     const eyes = new THREE.MeshStandardMaterial({ color: 0x28352e });
     const white = new THREE.MeshStandardMaterial({ color: 0xfff8e8 });
     function sphere(parent: THREE.Object3D, x: number, y: number, z: number, sx: number, sy: number, sz: number, material: THREE.Material) {
-      const mesh = new THREE.Mesh(new THREE.SphereGeometry(1, 28, 20), material);
+      const mesh = new THREE.Mesh(new THREE.SphereGeometry(1, 20, 12), material);
       mesh.position.set(x,y,z); mesh.scale.set(sx,sy,sz); parent.add(mesh); return mesh;
     }
     function bone(parent: THREE.Object3D, length: number, radius: number, material: THREE.Material) {
@@ -81,9 +81,9 @@ export default function Avatar(props: Props) {
       fingers.push(joints);
       shoulder.rotation.z=-side * 2.85;
     }
-    let lastTick=performance.now(); let motion=0;
+    let lastTick=performance.now(); let lastRender=0; let motion=0;
     const animate = () => {
-      const s=state.current; const tick=performance.now(); const dt=Math.min((tick-lastTick)/1000,.05); lastTick=tick;
+      const s=state.current; const tick=performance.now(); if(tick-lastRender<1000/(s.reduced?12:24))return;lastRender=tick; const dt=Math.min((tick-lastTick)/1000,.05); lastTick=tick;
       if(s.playing && !s.reduced) motion+=dt*s.speed;
       const gesture=s.gesture;
       const active=!!gesture;

@@ -7,7 +7,7 @@ This release is a deployable research demo. It is **not a production-ready sign-
 - Separate camera and microphone consent, visible capture state, and explicit stop controls.
 - Vision worker termination and track cleanup on stop, navigation within the app, page hiding, and unmount.
 - Neural inference off the main UI thread with one in-flight camera frame at a time.
-- Supported-category allowlist, configurable confidence threshold, 650 ms camera hold, and repeat suppression until release.
+- Supported-category allowlist, configurable confidence threshold, 350 ms/three-result camera hold, bounded low-confidence assist after a longer hold, and repeat suppression until release.
 - Human review before text-to-speech; no auto-speech from uncertain predictions.
 - Whole-phrase matching for reverse mapping. Unsupported messages remain readable without invented gestures.
 - No server, account database, persistent transcript storage, recording, analytics, or application API credentials.
@@ -30,3 +30,7 @@ This release is a deployable research demo. It is **not a production-ready sign-
 Use a current Chromium desktop browser and HTTPS (or localhost) for the camera. Browser microphone transcription is optional and provider-dependent; audio may go to the browser provider. Some TTS voices are remote; the voice selector labels local voices. Safari/Firefox and mobile behavior require additional device testing. Text input and captions are the fallback.
 
 The model confidence display is not a published accuracy number. Inference timing is device-dependent and excludes the 650 ms hold, review, and speech startup. Avatar mouth motion is decorative, not phoneme-synchronized speech animation.
+
+## October 30 personal-learning update
+
+ISL is the chosen learning direction. The 207 prompts are not pretrained recognition classes. Users may teach up to 200 static poses, retain them with explicit export/import, and preview their saved landmarks. None of this replaces language-specific translation training, motion/facial grammar, or Deaf-user validation. See [ISL personal learning](isl-personal-learning.md) and [latency measurements](latency.md).

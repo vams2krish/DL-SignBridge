@@ -8,7 +8,7 @@ test('real model sample → editable caption → speech; showcases desktop produ
   await page.screenshot({path:'../docs/showcase/01-studio.png',fullPage:true});
   await page.getByRole('button',{name:'Run sample photo'}).click();
   await expect(page.getByLabel('REVIEW YOUR CAPTION')).toHaveValue('Yes',{timeout:60000});
-  await expect(page.getByRole('status')).toContainText('Thumb up recognized');
+  await expect(page.locator('.feedback')).toContainText('Thumb up recognized');
   await page.screenshot({path:'../docs/showcase/02-recognition.png',fullPage:true});
   // Browser audio is stubbed at the device boundary; vision above is not mocked.
   await page.evaluate(()=>{const w=window as typeof window&{spoken?:string};window.speechSynthesis.speak=(u)=>{w.spoken=u.text;u.onstart?.(new Event('start') as SpeechSynthesisEvent);};window.speechSynthesis.cancel=()=>{};});
@@ -29,7 +29,7 @@ test('text → gesture avatar, unknown message fallback, and session clearing',a
   await page.screenshot({path:'../docs/showcase/03-avatar.png',fullPage:true});
   await page.getByLabel('Type or dictate a supported phrase').fill('Tell me about the weather');
   await page.getByRole('button',{name:'Animate message'}).click();
-  await expect(page.getByRole('status')).toContainText('outside the demo vocabulary');
+  await expect(page.locator('.feedback')).toContainText('outside the demo vocabulary');
   await expect(page.locator('#text-fallback')).toHaveText('Tell me about the weather');
   await expect(page.getByRole('img',{name:'Friendly illustrative avatar in a resting pose.'})).toBeVisible();
   await page.getByRole('button',{name:'Clear session & stop devices'}).click();
@@ -52,11 +52,60 @@ test('library, responsive layouts and accessibility',async({page})=>{
   expect(result.violations).toEqual([]);
   await page.getByRole('button',{name:'Gesture library',exact:true}).click();
   await expect(page.locator('.library-item')).toHaveCount(7);
+  await page.getByLabel('Search ISL practice prompts').fill('Water');
   await page.screenshot({path:'../docs/showcase/04-library.png',fullPage:true});
   await page.setViewportSize({width:390,height:844});
   await page.getByRole('button',{name:'Studio',exact:true}).click();
   expect(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth)).toBe(true);
   await page.screenshot({path:'../docs/showcase/05-mobile.png',fullPage:true});
+});
+
+test('teach a personal pose → recognize → preview → export/import → reject unknown',async({page})=>{
+  await page.addInitScript(()=>{
+    navigator.mediaDevices.getUserMedia=async()=>{
+      const image=new Image();image.src='/thumb-up.jpg';await image.decode();
+      const canvas=document.createElement('canvas');canvas.width=image.naturalWidth;canvas.height=image.naturalHeight;
+      const ctx=canvas.getContext('2d')!;ctx.drawImage(image,0,0);
+      const stream=canvas.captureStream(15);const timer=setInterval(()=>ctx.drawImage(image,0,0),65);
+      const track=stream.getVideoTracks()[0],stop=track.stop.bind(track);track.stop=()=>{clearInterval(timer);stop();};return stream;
+    };
+  });
+  await page.goto('/');await page.getByRole('button',{name:'Enable camera'}).click();
+  await page.getByRole('button',{name:'Allow camera',exact:true}).click();
+  await expect(page.getByRole('button',{name:'Stop camera'})).toBeVisible();
+  await page.getByLabel('Personal gesture name').fill('My sample pose');
+  await page.getByLabel('Personal spoken phrase').fill('I would like water');
+  await page.getByRole('button',{name:'Capture pose examples'}).click();
+  await expect(page.getByRole('button',{name:'Save learned gesture'})).toBeEnabled({timeout:45000});
+  await page.getByRole('button',{name:'Save learned gesture'}).click();
+  await expect(page.getByLabel('Recognition vocabulary')).toHaveValue('personal');
+  await expect(page.getByLabel('REVIEW YOUR CAPTION')).toHaveValue('I would like water',{timeout:20000});
+  await page.getByRole('button',{name:'Stop camera'}).click();
+  await page.locator('#personal-learning').screenshot({path:'../docs/showcase/06-personal-learning.png'});
+  const downloadPromise=page.waitForEvent('download');
+  await page.getByRole('button',{name:'Export vocabulary'}).click();
+  const download=await downloadPromise;const file=await download.path();expect(file).toBeTruthy();
+  await page.getByRole('button',{name:'Clear learned vocabulary'}).click();
+  await page.getByLabel('Import personal vocabulary file').setInputFiles(file!);
+  await expect(page.locator('#personal-learning').getByText('My sample pose',{exact:true})).toBeVisible();
+  await page.getByRole('button',{name:'Speech / text'}).click();
+  await page.getByLabel('Type or dictate a supported phrase').fill('I would like water');
+  await page.getByRole('button',{name:'Animate message'}).click();
+  await expect(page.getByRole('img',{name:/Saved personal hand landmarks for My sample pose/})).toBeVisible();
+  await page.locator('.studio-grid').screenshot({path:'../docs/showcase/07-saved-pose.png'});
+  await page.getByLabel('Type or dictate a supported phrase').fill('Please invent an ISL sentence');
+  await page.getByRole('button',{name:'Animate message'}).click();
+  await expect(page.locator('.feedback')).toContainText('outside the demo vocabulary');
+});
+
+test('ISL catalog routes an untrained practice prompt into the personal teacher',async({page})=>{
+  await page.goto('/');await page.getByRole('button',{name:'Gesture library',exact:true}).click();
+  await expect(page.getByRole('link',{name:'Open official ISL dictionary'})).toHaveAttribute('href','https://islrtc.nic.in/isl-dictionary/');
+  await page.getByLabel('Search ISL practice prompts').fill('Water');
+  await expect(page.locator('.practice-card')).toHaveCount(1);
+  await page.getByRole('button',{name:'Teach this pose'}).click();
+  await expect(page.getByLabel('Personal gesture name')).toHaveValue('Water');
+  await expect(page.getByRole('button',{name:'Capture pose examples'})).toBeDisabled();
 });
 
 test('camera frame pipeline uses real inference and releases its media track',async({page})=>{

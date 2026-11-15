@@ -1,12 +1,12 @@
-# SignBridge — Deep Learning Accessibility Studio
+# SignBridge — ISL Learning & Accessibility Studio
 
-**Gesture → captions & speech · Speech/text → illustrative avatar**
+**Indian Sign Language learning · Personal pose vocabulary · Gesture → speech · Saved-pose previews**
 
-A working browser demo that explores two-way accessible communication with on-device deep learning, editable captions, and a 3D companion named Ari.
+A working ISL-focused learning workspace with on-device deep learning, editable captions, personal static-pose learning, and a 3D companion named Ari.
 
 **[Open the live demo](https://signbridge-gesture-lab.adam-vamshikrishna.chatgpt.site)** · Hosted privately through Sites; sign in with the owning account. The source repository remains public.
 
-> **Release scope:** deployable research demo, not a production-ready sign-language interpreter. This version recognizes **seven isolated hand gestures** and maps a bounded set of English phrases to illustrative avatar poses. It does not translate ASL, continuous signing, or arbitrary sentences. No translation-accuracy claim is made.
+> **Release scope:** deployable research demo, not a production-ready sign-language interpreter. This version combines **7 built-in demo gestures**, **207 searchable practice prompts**, and **up to 200 user-taught static poses**. Practice prompts are not pretrained recognition classes. It does not translate ISL sentences, continuous signing, or arbitrary text. No translation-accuracy claim is made.
 
 ## Product showcases
 
@@ -30,11 +30,11 @@ The sample button runs the actual MediaPipe model on an attributed test photogra
 
 ![Speech and text input driving the Victory gesture on the Ari avatar](docs/showcase/03-avatar.png)
 
-### 4. The supported gesture library
+### 4. ISL learning and the gesture library
 
-Each category includes a pose hint, chosen communication intent, and avatar preview. The chosen phrases are demo conventions, not an ASL dictionary.
+Search 207 categorized practice prompts, open the official ISLRTC dictionary, and send a prompt into the personal teacher. The seven built-in categories remain separately labeled as generic demo gestures.
 
-![Seven supported gesture categories with pose instructions and preview controls](docs/showcase/04-library.png)
+![ISL practice catalog with official dictionary link, search, and built-in demo gestures](docs/showcase/04-library.png)
 
 ### 5. Mobile layout
 
@@ -42,16 +42,31 @@ The studio stacks its input and output panels on smaller screens, with the same 
 
 <img src="docs/showcase/05-mobile.png" alt="SignBridge studio on a 390-pixel mobile viewport" width="390" />
 
+### 6. Teach a personal vocabulary
+
+Capture 12–24 examples of a distinct static pose, label it, test it, and deliberately export/import your vocabulary. No photographs are saved. The showcase below maps a sample thumb pose to an arbitrary test phrase; **it does not demonstrate the ISL sign for water**.
+
+![Personal gesture teacher with capture controls, saved phrase, and vocabulary export and import](docs/showcase/06-personal-learning.png)
+
+### 7. Preview your own saved hand landmarks
+
+A matching text phrase can display your captured static pose instead of inventing an unfamiliar signing motion. This is a landmark preview, not a validated signing avatar or movement reconstruction.
+
+![User-taught phrase displaying saved personal hand landmarks](docs/showcase/07-saved-pose.png)
+
 ## What works now
 
 | Capability | Implementation and boundary |
 | --- | --- |
-| Live gesture recognition | Self-hosted MediaPipe neural model, CPU inference in a browser worker, one hand at a time |
-| Temporal proposal filtering | Default 70% model-score threshold, 650 ms confident camera hold, release-based repeat suppression |
+| Live gesture recognition | Self-hosted MediaPipe VIDEO tracking in a worker, hardware GPU/CPU selection, one- or two-hand capture |
+| Temporal proposal filtering | Default 70% threshold, 350 ms/three-result hold, 150 ms dropout tolerance; labeled low-confidence assist after a longer hold |
 | Sample without camera | Real inference on Google's attributed thumb-up test photo; no synthetic prediction |
-| Caption review | Editable caption, user-triggered text-to-speech, stop speaking, voice selection |
+| ISL practice library | 207 organized prompts linked to the official dictionary; not pretrained recognition classes |
+| Personal static-pose learner | 12–24 examples per pose, up to 200 labels, distance/ambiguity rejection, export/import |
+| Responsiveness diagnostics | Tracked hands, lighting/framing hints, processing FPS, rolling inference p95, resolution/hold/backend controls |
+| Caption review | Editable/appendable caption, user-triggered speech, stop speaking, voice selection |
 | Speech input | Optional browser speech recognition with separate consent and editable transcript |
-| Text/speech to avatar | Whole-phrase matching against seven supported intents; unsupported text remains visible |
+| Text/speech to avatar | Whole-phrase matching against built-in intents or personal captions; personal matches show saved landmarks, unsupported text remains visible |
 | Avatar | Procedural Three.js character with articulated fingers and seven illustrative static gesture poses |
 | Privacy controls | No application recording, upload, analytics, backend, or persistent conversation storage |
 | Session history | Confirmed speech and avatar messages in memory, capped at 20; clear session also stops devices |
@@ -63,9 +78,9 @@ Browser speech recognition may send audio to its provider. TTS voices can be loc
 
 ## Is it ML, DL, or GenAI?
 
-**Primary classification: Deep Learning (DL), a subset of Machine Learning (ML).** The shipped visual recognition uses pretrained MediaPipe neural networks. Temporal confidence filtering and phrase mapping are deterministic application logic. The avatar is procedural animation. There is no LLM, generative translation model, or OpenAI API dependency.
+**Classification: hybrid Deep Learning + Machine Learning (DL + ML).** Pretrained MediaPipe neural networks supply visual perception; a nearest-neighbor ML matcher learns personal static-pose examples. Temporal confidence filtering and phrase mapping are deterministic application logic. The avatar is procedural animation. There is no LLM, generative translation model, or OpenAI API dependency.
 
-The long-term project remains **Deep Learning — SignBridge Accessibility Agent**, with ASL–English translation as a proposed future research direction. Actual language scope must be agreed with Deaf collaborators and sign-language specialists; seven hand categories do not establish support for a natural sign language.
+The long-term project remains **Deep Learning — SignBridge Accessibility Agent**, with ISL–English translation as the chosen future research direction. ISL dialect and use-case scope must be agreed with Deaf collaborators and sign-language specialists; seven hand categories do not establish support for a natural sign language.
 
 ## Try it locally
 
@@ -90,6 +105,20 @@ Open the Local URL printed by Vite, normally `http://127.0.0.1:5173/`. No API ke
 5. Optionally choose **Use microphone**, review its separate privacy notice, dictate a supported phrase, and review the transcript before animating it.
 6. Try an unsupported sentence: the app preserves the text and declines to invent a gesture.
 7. Use **Clear session & stop devices** to stop camera, microphone, and speech and clear session content.
+
+## Personal ISL learning and latency improvements
+
+1. Open **Gesture library**, search a practice prompt, and consult the **official ISL dictionary** with a qualified signer.
+2. Choose **Teach this pose**. In Studio settings, select one or two hands, then enable the camera.
+3. Enter a distinct name and caption. Capture examples, save, release the pose, and test again in **Personal recognition** mode.
+4. Review the proposed caption before speech. Use the exact saved caption in text mode to preview its stored hand landmarks.
+5. Export deliberately before reloading; the vocabulary otherwise stays in this tab. Landmark files are personal data even without photos.
+
+A static learner cannot model ISL movement, face/body grammar, or signs distinguished only by location on the body. Similar handshapes may be rejected or confused. The 200-pose limit is capacity, not a count of independently validated signs.
+
+VIDEO tracking reduced warm median inference from **75.9 ms to 48.6 ms** (about 36%) in a controlled repeated-photo, one-hand CPU comparison. First-frame VIDEO inference was slower. This is not a promised end-to-end latency improvement. See [measurement and tradeoffs](docs/latency.md), [raw benchmark](docs/performance-tracking.json), and [personal-learning details](docs/isl-personal-learning.md).
+
+Built-in **assist mode** explicitly permits a stable score up to eight percentage points below the chosen threshold after at least one second and six matching results. Proposals are labeled and require review. Turn it off for stricter abstention. It does not apply to personal matching. Physical camera validation was attempted on this execution host but was unavailable; generated camera-stream tests exercise actual neural inference and track cleanup.
 
 ## Supported demo vocabulary
 
@@ -145,11 +174,11 @@ npm run preview
 
 Browser tests run against a dedicated local production-preview port. The sample test uses actual model inference. Physical audio output and microphone recognition are stubbed at their browser API boundaries in automated tests. A generated camera stream from the attributed sample exercises the actual frame loop and hold gate; this does not validate a physical camera or a real signer's performance.
 
-The test suite regenerates the README's five showcases. Dependency licenses and model provenance are documented in [third-party notices](app/THIRD_PARTY_NOTICES.md) and [the model provenance manifest](app/public/models/provenance.json).
+The test suite regenerates the README's seven showcases. Dependency licenses and model provenance are documented in [third-party notices](app/THIRD_PARTY_NOTICES.md) and [the model provenance manifest](app/public/models/provenance.json).
 
 See [evaluation protocol](docs/evaluation.md) for a private dataset harness and [production readiness](docs/production-readiness.md) for the remaining release gates. The GitHub workflow runs install, asset preparation, tests, build, audit, and browser checks on pushes and pull requests.
 
-Latest local verification: **17 unit tests and 6 browser tests passed**, production build passed, no violations in the tested initial accessibility scan, and zero known dependency vulnerabilities. Read the [verification report](docs/verification.md) for the exact tested boundaries and limitations. Hosted deployment succeeded on October 28, 2026.
+Latest local verification: **32 unit tests and 8 browser tests passed**, production build passed, no violations in the tested initial accessibility scan, and zero known dependency vulnerabilities. Read the [verification report](docs/verification.md) for the exact tested boundaries and limitations. The original demo was published on October 28, 2026; this revision adds the ISL personal-learning workflow.
 
 ## Roadmap and honest progress
 
@@ -159,7 +188,10 @@ Latest local verification: **17 unit tests and 6 browser tests passed**, product
 - [x] Connect reviewed captions to speech and a bounded speech/text-to-avatar pathway.
 - [x] Add a gesture library, privacy notices, session clearing, and reduced decorative motion.
 - [x] Add reproducible evaluation tooling, automated checks, CI, and actual product screenshots.
-- [ ] Confirm the target natural language pair and use cases with compensated Deaf collaborators.
+- [x] Prioritize ISL learning, add 207 practice prompts, and link official ISLRTC references.
+- [x] Add up to 200 personal static poses, one/two-hand features, capture/export/import, rejection, and saved-pose previews.
+- [x] Add video tracking, labeled low-confidence assist, performance controls, and camera diagnostics.
+- [ ] Validate ISL dialect, use cases, and forms with compensated Deaf collaborators.
 - [ ] Establish a consented, representative, signer-disjoint evaluation dataset and publish metrics.
 - [ ] Train or integrate language-specific recognition and translation models, including continuous signing and non-manual grammar.
 - [ ] Add linguist-reviewed motion clips and validate avatar comprehensibility with fluent signers.
@@ -167,7 +199,7 @@ Latest local verification: **17 unit tests and 6 browser tests passed**, product
 - [ ] Complete physical hardware, assistive-technology, independent accessibility, security, and operational release reviews.
 - [ ] Explore constrained generative motion only after validated baselines exist.
 
-The completed baseline is gesture classification, not completion of the original ASL translation research goals. A successful test photograph does not establish generalization or translation accuracy. This demo should not be used as a substitute for a qualified interpreter in critical interactions.
+The completed baseline is gesture classification and personal static-pose matching, not completion of the ISL translation research goals. A successful test photograph does not establish generalization or translation accuracy. This demo should not be used as a substitute for a qualified interpreter in critical interactions.
 
 ## Repository layout
 
@@ -181,7 +213,7 @@ DL-SignBridge/
 │   ├── .openai/hosting.json     # Sites identity and static hosting configuration
 │   └── THIRD_PARTY_NOTICES.md
 ├── docs/
-│   ├── showcase/               # Five real product screenshots
+│   ├── showcase/               # Seven real product screenshots
 │   ├── evaluation.md           # Evaluation manifest and methodology
 │   ├── production-readiness.md # Safeguards and remaining release gates
 │   └── artwork.md              # Original concept-art provenance
@@ -192,6 +224,7 @@ DL-SignBridge/
 
 Contributions from Deaf collaborators, linguists, accessibility practitioners, animators, and ML engineers are welcome. Open an issue with the language, use case, evidence, and expected outcome. Do not upload recordings, transcripts, or datasets without consent and redistribution rights. Private data, model caches, and local evaluation reports are excluded from Git.
 
+- [Official ISLRTC dictionary](https://islrtc.nic.in/isl-dictionary/) and [dictionary FAQ](https://islrtc.nic.in/faq/) — ISL learning resources, terminology, and regional variation.
 - [MediaPipe Gesture Recognizer documentation](https://ai.google.dev/edge/mediapipe/solutions/vision/gesture_recognizer/web_js) — model integration and supported categories.
 - [Sign Language Recognition, Generation, and Translation: An Interdisciplinary Perspective](https://www.microsoft.com/en-us/research/wp-content/uploads/2019/07/Sign_Language_Workshop_Camera_accessible.pdf) — linguistic context and the distinction between recognition, translation, and production.
 - [U.S. Deaf Community Perspectives on Automatic Sign Language Translation](https://www.microsoft.com/en-us/research/uploads/prod/2023/10/Automatic_Sign_Language_Translation_Perspectives.pdf) — community perspectives for participatory design.
